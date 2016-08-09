@@ -55,11 +55,13 @@ module Fastlane
         build_type = params[:build_type]
         target = params[:target]
         solution = params[:solution]
+        define_constants = params[:define_constants]
 
         command = "#{XBUILD} "
         command << "/target:#{target} " if target != nil
         command << "/p:Platform=#{platform} " if platform != nil
         command << "/p:Configuration=#{build_type} " if build_type != nil
+        command << "/p:DefineConstants=\"#{define_constants}\" " if define_constants != nil
         command << solution
 
         Helper::XamarinBuildHelper.bash(command, !params[:print_all])
@@ -178,6 +180,14 @@ module Fastlane
               key: :project,
               env_name: 'FL_XAMARIN_BUILD_PROJECT',
               description: 'Project to build or clean',
+              is_string: true,
+              optional: true
+          ),
+
+          FastlaneCore::ConfigItem.new(
+              key: :define_constants,
+              env_name: 'FL_XAMARIN_DEFINE_CONSTANT',
+              description: 'Define constants for precompiler',
               is_string: true,
               optional: true
           ),
